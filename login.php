@@ -37,8 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             setFlashMessage('success', 'Welcome back, ' . htmlspecialchars($user['full_name']) . '!');
 
-            if (!empty($redirect) && strpos($redirect, 'http') === false) {
-                header('Location: ' . getBaseUrl() . ltrim($redirect, '/'));
+            if (!empty($redirect) && strpos($redirect, 'http://') === false && strpos($redirect, 'https://') === false && strpos($redirect, '//') !== 0) {
+                $baseUrl = getBaseUrl();
+                if (strpos($redirect, $baseUrl) === 0) {
+                    $target = $redirect;
+                } else {
+                    $target = $baseUrl . ltrim($redirect, '/');
+                }
+                header('Location: ' . $target);
             } elseif ($user['role'] === 'admin') {
                 header('Location: ' . getBaseUrl() . 'admin/dashboard.php');
             } else {

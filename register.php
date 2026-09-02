@@ -13,6 +13,7 @@ $studentId = '';
 $email = '';
 $faculty = '';
 $phone = '';
+$redirect = isset($_GET['redirect']) ? trim($_GET['redirect']) : (isset($_POST['redirect']) ? trim($_POST['redirect']) : '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullName = trim($_POST['full_name'] ?? '');
@@ -22,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
+    $redirect = trim($_POST['redirect'] ?? '');
 
     if (empty($fullName) || empty($studentId) || empty($email) || empty($faculty) || empty($password)) {
         $error = 'Please fill in all mandatory fields.';
@@ -55,7 +57,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['faculty'] = $faculty;
 
             setFlashMessage('success', 'Welcome to NSBM EventHub! Your student account has been created successfully.');
-            header('Location: ' . getBaseUrl() . 'events.php');
+            
+            if (!empty($redirect) && strpos($redirect, 'http://') === false && strpos($redirect, 'https://') === false && strpos($redirect, '//') !== 0) {
+                $baseUrl = getBaseUrl();
+                if (strpos($redirect, $baseUrl) === 0) {
+                    $target = $redirect;
+                } else {
+                    $target = $baseUrl . ltrim($redirect, '/');
+                }
+                header('Location: ' . $target);
+            } else {
+                header('Location: ' . getBaseUrl() . 'events.php');
+            }
             exit;
         }
     }
@@ -93,6 +106,7 @@ require_once __DIR__ . '/includes/header.php';
         </div>
 
         <form action="<?php echo $baseUrl; ?>register.php" method="POST" id="studentRegisterForm">
+            <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($redirect); ?>">
             <div class="form-group">
                 <label class="form-label" for="full_name">Full Name *</label>
                 <input type="text" name="full_name" id="full_name" class="form-control" placeholder="e.g. Kamal Perera" required value="<?php echo htmlspecialchars($fullName); ?>">

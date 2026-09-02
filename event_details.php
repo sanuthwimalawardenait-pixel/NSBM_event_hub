@@ -216,7 +216,7 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
                     </div>
 
-                    <?php if $isPast): ?>
+                    <?php if ($isPast): ?>
                         <div class="alert alert-warning" style="margin-bottom: 0;">
                             <i class="bi bi-hourglass-bottom"></i> This event has concluded.
                         </div>
@@ -229,11 +229,18 @@ require_once __DIR__ . '/includes/header.php';
                             <i class="bi bi-x-circle-fill"></i> Registrations are closed (Max Capacity Reached).
                         </div>
                     <?php elseif (!isLoggedIn()): ?>
-                        <div style="text-align: center;">
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Sign in with your student credentials to register for this event.</p>
-                            <a href="<?php echo $baseUrl; ?>login.php?redirect=event_details.php?id=<?php echo $event['id']; ?>" class="btn btn-primary" style="width: 100%;">
+                        <div style="text-align: center; padding: 0.5rem 0;">
+                            <div style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                                <i class="bi bi-shield-lock" style="font-size: 1.75rem; color: var(--primary); display: block; margin-bottom: 0.35rem;"></i>
+                                <strong style="color: var(--secondary);">Login Required to Register</strong>
+                                <p style="margin-top: 0.25rem;">You must be signed in with a student account to book your event pass.</p>
+                            </div>
+                            <a href="<?php echo $baseUrl; ?>login.php?redirect=<?php echo urlencode('event_details.php?id=' . $event['id']); ?>" class="btn btn-primary btn-lg" style="width: 100%; margin-bottom: 0.75rem;">
                                 <i class="bi bi-box-arrow-in-right"></i> Sign In to Register
                             </a>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                New student? <a href="<?php echo $baseUrl; ?>register.php?redirect=<?php echo urlencode('event_details.php?id=' . $event['id']); ?>" style="font-weight: 600;">Create Account</a>
+                            </div>
                         </div>
                     <?php elseif (isStudent()): ?>
                         <form action="<?php echo $baseUrl; ?>register_event.php" method="POST">
@@ -247,9 +254,18 @@ require_once __DIR__ . '/includes/header.php';
                             </button>
                         </form>
                     <?php elseif (isAdmin()): ?>
-                        <a href="<?php echo $baseUrl; ?>admin/registrations.php?event_id=<?php echo $event['id']; ?>" class="btn btn-secondary" style="width: 100%;">
-                            <i class="bi bi-people"></i> Manage Registrations
-                        </a>
+                        <div style="text-align: center; padding: 0.5rem 0;">
+                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                                <span class="badge badge-urgent" style="margin-bottom: 0.5rem; display: inline-block;">Administrator Access</span>
+                                <p>You have full managerial privileges over this campus event.</p>
+                            </div>
+                            <a href="<?php echo $baseUrl; ?>admin/registrations.php?event_id=<?php echo $event['id']; ?>" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">
+                                <i class="bi bi-people-fill"></i> Manage Registrations
+                            </a>
+                            <a href="<?php echo $baseUrl; ?>admin/event_edit.php?id=<?php echo $event['id']; ?>" class="btn btn-outline-secondary" style="width: 100%;">
+                                <i class="bi bi-pencil-square"></i> Edit Event Details
+                            </a>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
