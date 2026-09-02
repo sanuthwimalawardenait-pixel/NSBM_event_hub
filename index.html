@@ -471,34 +471,20 @@
                     <img src="assets/images/logo.jpeg" alt="NSBM EventHub Logo" style="height: 60px; max-width: 100%; object-fit: contain; margin: 0 auto; display: block; border-radius: var(--radius-sm);">
                 </div>
                 <h2 class="auth-title" style="font-size: 1.4rem; font-weight: 700; color: var(--secondary);">Sign In to NSBM EventHub</h2>
-                <p class="auth-subtitle" style="color: var(--text-muted); font-size: 0.875rem;">Select demo credentials or enter your university email</p>
-            </div>
-
-            <div style="margin-bottom: 1.5rem; padding: 1rem; background-color: #f8fafc; border: 1px dashed var(--border-color); border-radius: var(--radius-md); font-size: 0.85rem;">
-                <div style="font-weight: 700; color: var(--secondary); margin-bottom: 0.5rem;">
-                    <i class="bi bi-key-fill" style="color: var(--primary);"></i> One-Click Demo Logins:
-                </div>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <button type="button" onclick="loginAs('student')" class="btn btn-secondary btn-sm" style="flex: 1;">
-                        <i class="bi bi-person-fill"></i> Student (Kamal)
-                    </button>
-                    <button type="button" onclick="loginAs('admin')" class="btn btn-secondary btn-sm" style="flex: 1; border-color: var(--danger);">
-                        <i class="bi bi-shield-lock-fill" style="color: var(--danger);"></i> Admin Portal
-                    </button>
-                </div>
+                <p class="auth-subtitle" style="color: var(--text-muted); font-size: 0.875rem;">Sign in to your university portal account</p>
             </div>
 
             <form onsubmit="handleCustomLogin(event)">
                 <div class="form-group">
                     <label class="form-label">University Email</label>
-                    <input type="email" id="loginEmail" class="form-control" placeholder="kamal.p@students.nsbm.ac.lk" required value="kamal.p@students.nsbm.ac.lk">
+                    <input type="email" id="loginEmail" class="form-control" placeholder="name@nsbm.ac.lk" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required value="student123">
+                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 0.5rem;">
-                    <i class="bi bi-box-arrow-in-right"></i> Sign In to Account
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In to Portal
                 </button>
             </form>
 

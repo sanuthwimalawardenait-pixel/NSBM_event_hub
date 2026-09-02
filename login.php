@@ -99,16 +99,6 @@ require_once __DIR__ . '/includes/header.php';
             </button>
         </form>
 
-        <div style="margin-top: 1.5rem; padding: 1rem; background-color: #f8fafc; border: 1px dashed var(--border-color); border-radius: var(--radius-md); font-size: 0.825rem;">
-            <div style="font-weight: 700; color: var(--secondary); margin-bottom: 0.4rem;">
-                <i class="bi bi-key-fill" style="color: var(--primary);"></i> Demo Access Credentials:
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.3rem; color: var(--text-muted);">
-                <div><strong>Admin:</strong> <code>admin@nsbm.ac.lk</code> / <code>admin123</code></div>
-                <div><strong>Student:</strong> <code>kamal.p@students.nsbm.ac.lk</code> / <code>student123</code></div>
-            </div>
-        </div>
-
         <div class="auth-footer">
             Don't have a student account? <a href="<?php echo $baseUrl; ?>register.php">Register Here</a>
         </div>
