@@ -81,9 +81,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="auth-card" style="max-width: 580px;">
         <div class="auth-header">
             <div class="auth-logo">
-                <div class="brand-icon" style="width: 54px; height: 54px; font-size: 1.5rem; margin: 0 auto;">
-                    <i class="bi bi-person-plus-fill"></i>
-                </div>
+                <img src="<?php echo $baseUrl; ?>assets/images/logo.jpeg" alt="NSBM EventHub Logo" style="height: 64px; max-width: 100%; object-fit: contain; margin: 0 auto; display: block; border-radius: var(--radius-sm);">
             </div>
             <h2 class="auth-title">Create Student Account</h2>
             <p class="auth-subtitle">Register with your NSBM credentials to join university events</p>

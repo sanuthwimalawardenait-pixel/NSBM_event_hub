@@ -15,6 +15,7 @@ $baseUrl = getBaseUrl();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | ' : ''; ?>Admin Control Panel - NSBM EventHub</title>
+    <link rel="icon" type="image/jpeg" href="<?php echo $baseUrl; ?>assets/images/logo.jpeg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,10 +27,7 @@ $baseUrl = getBaseUrl();
         <div class="container-fluid navbar-container">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <a href="<?php echo $baseUrl; ?>admin/dashboard.php" class="navbar-brand">
-                    <div class="brand-icon">
-                        <i class="bi bi-shield-lock-fill"></i>
-                    </div>
-                    <span>NSBM <span style="color: var(--primary);">EventHub</span></span>
+                    <img src="<?php echo $baseUrl; ?>assets/images/logo.jpeg" alt="NSBM EventHub Logo" class="brand-logo-img">
                     <span class="brand-badge" style="background: var(--danger-subtle); color: var(--danger);">Admin</span>
                 </a>
             </div>

@@ -5,10 +5,7 @@
             <div class="footer-grid">
                 <div>
                     <div class="navbar-brand" style="color: #ffffff; margin-bottom: 1rem;">
-                        <div class="brand-icon">
-                            <i class="bi bi-calendar-event"></i>
-                        </div>
-                        <span>NSBM <span style="color: #4ade80;">EventHub</span></span>
+                        <img src="<?php echo $baseUrl; ?>assets/images/logo.jpeg" alt="NSBM EventHub Logo" style="height: 44px; width: auto; object-fit: contain; background: #ffffff; padding: 4px 8px; border-radius: var(--radius-sm); display: inline-block;">
                     </div>
                     <p style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">
                         The official event planning and scheduling system for NSBM Green University. Empowering university clubs, societies, and students to discover, organize, and participate in academic and extracurricular experiences.

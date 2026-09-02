@@ -115,6 +115,21 @@ a:hover {
     box-shadow: 0 4px 10px rgba(0, 104, 56, 0.25);
 }
 
+.brand-logo-img {
+    height: 48px;
+    max-height: 48px;
+    width: auto;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    display: inline-block;
+    vertical-align: middle;
+    transition: transform 0.2s ease;
+}
+
+.brand-logo-img:hover {
+    transform: scale(1.02);
+}
+
 .brand-badge {
     font-size: 0.7rem;
     background: var(--accent-subtle);
