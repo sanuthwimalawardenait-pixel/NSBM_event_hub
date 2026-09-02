@@ -3,11 +3,31 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-define('DB_HOST', '127.0.0.1');
-define('DB_PORT', '3306');
-define('DB_NAME', 'nsbm_eventhub');
-define('DB_USER', 'root');
-define('DB_PASS', '12345');
+// Database configuration with environment variable support for cloud/container deployment
+$dbHost = getenv('DB_HOST') ?: (getenv('MYSQLHOST') ?: '127.0.0.1');
+$dbPort = getenv('DB_PORT') ?: (getenv('MYSQLPORT') ?: '3306');
+$dbName = getenv('DB_NAME') ?: (getenv('MYSQLDATABASE') ?: 'nsbm_eventhub');
+$dbUser = getenv('DB_USER') ?: (getenv('MYSQLUSER') ?: 'root');
+$dbPass = getenv('DB_PASS') ?: (getenv('MYSQLPASSWORD') ?: (getenv('DB_PASSWORD') ?: '12345'));
+
+// Support DATABASE_URL / MYSQL_URL (Railway, Heroku, Render, etc.)
+$databaseUrl = getenv('DATABASE_URL') ?: (getenv('MYSQL_URL') ?: (getenv('CLEARDB_DATABASE_URL') ?: getenv('JAWSDB_URL')));
+if (!empty($databaseUrl)) {
+    $dbParts = parse_url($databaseUrl);
+    if ($dbParts && isset($dbParts['host'])) {
+        $dbHost = $dbParts['host'];
+        $dbPort = $dbParts['port'] ?? 3306;
+        $dbUser = $dbParts['user'] ?? 'root';
+        $dbPass = $dbParts['pass'] ?? '';
+        $dbName = isset($dbParts['path']) ? ltrim($dbParts['path'], '/') : 'nsbm_eventhub';
+    }
+}
+
+define('DB_HOST', $dbHost);
+define('DB_PORT', $dbPort);
+define('DB_NAME', $dbName);
+define('DB_USER', $dbUser);
+define('DB_PASS', $dbPass);
 
 function getDbConnection() {
     static $pdo = null;
@@ -16,7 +36,7 @@ function getDbConnection() {
         $connected = false;
         $lastError = '';
 
-        foreach ($candidatePasswords as $pass) {
+        foreach (array_unique($candidatePasswords) as $pass) {
             try {
                 $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4";
                 $options = [
