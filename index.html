@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NSBM EventHub – University Event Planning & Scheduling System</title>
+    <title>Home - University Event Planning & Scheduling | NSBM EventHub</title>
     <meta name="description" content="Official Event Planning and Scheduling System for NSBM Green University. Discover campus events, manage schedules, and register for university activities.">
     <link rel="icon" type="image/jpeg" href="assets/images/logo.jpeg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,45 +12,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        .demo-bar {
-            background: linear-gradient(90deg, #004d2a, #006838);
-            color: #ffffff;
-            padding: 0.6rem 1rem;
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-        }
-        .demo-bar a {
-            color: #fef08a;
-            font-weight: 600;
-            text-decoration: underline;
-        }
-        .demo-tabs {
-            display: flex;
-            gap: 0.5rem;
-            background: rgba(0,0,0,0.2);
-            padding: 0.25rem;
-            border-radius: 6px;
-        }
-        .demo-tab-btn {
-            background: transparent;
-            border: none;
-            color: #d1fae5;
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .demo-tab-btn.active, .demo-tab-btn:hover {
-            background: #ffffff;
-            color: #004d2a;
-        }
         .view-section {
             display: none;
         }
@@ -74,7 +35,7 @@
         .modal-dialog {
             background: #ffffff;
             border-radius: var(--radius-lg);
-            max-width: 620px;
+            max-width: 580px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -115,31 +76,30 @@
             padding: 1.5rem;
             margin-top: 1rem;
         }
+        .flash-toast {
+            position: fixed;
+            top: 85px;
+            right: 20px;
+            z-index: 3000;
+            min-width: 300px;
+            max-width: 420px;
+            box-shadow: var(--shadow-lg);
+            animation: slideInRight 0.3s ease;
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- GitHub Pages / Live Demo Notice Bar -->
-    <div class="demo-bar">
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <i class="bi bi-github"></i>
-            <span><strong>GitHub Live Interactive Demo</strong> &bull; NSBM EventHub System</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <div class="demo-tabs">
-                <button class="demo-tab-btn active" onclick="switchView('public')"><i class="bi bi-globe"></i> Public Portal</button>
-                <button class="demo-tab-btn" onclick="switchView('schedule')"><i class="bi bi-calendar-check"></i> My Schedule</button>
-                <button class="demo-tab-btn" onclick="switchView('announcements')"><i class="bi bi-megaphone"></i> Notices</button>
-                <button class="demo-tab-btn" onclick="switchView('admin')"><i class="bi bi-shield-lock"></i> Admin Preview</button>
-            </div>
-            <a href="https://github.com/sanuthwimalawardenait-pixel/NSBM_event_hub" target="_blank"><i class="bi bi-code-slash"></i> View Source</a>
-        </div>
-    </div>
+    <div id="flashToastContainer"></div>
 
     <!-- Navigation Header -->
     <header class="navbar">
         <div class="container navbar-container">
-            <a href="#" onclick="switchView('public')" class="navbar-brand">
+            <a href="javascript:void(0)" onclick="navigateTo('home')" class="navbar-brand">
                 <img src="assets/images/logo.jpeg" alt="NSBM EventHub Logo" class="brand-logo-img">
                 <span class="brand-badge">Green Campus</span>
             </a>
@@ -150,102 +110,99 @@
 
             <ul class="nav-menu" id="navbarMenu">
                 <li>
-                    <a href="#" onclick="switchView('public')" class="nav-link active" id="navPublic">
+                    <a href="javascript:void(0)" onclick="navigateTo('home')" class="nav-link active" id="navHome">
                         <i class="bi bi-house"></i> Home
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="switchView('public')" class="nav-link" id="navEvents">
+                    <a href="javascript:void(0)" onclick="navigateTo('events')" class="nav-link" id="navEvents">
                         <i class="bi bi-grid"></i> Events
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="switchView('announcements')" class="nav-link" id="navAnnouncements">
+                    <a href="javascript:void(0)" onclick="navigateTo('announcements')" class="nav-link" id="navAnnouncements">
                         <i class="bi bi-megaphone"></i> Announcements
                     </a>
                 </li>
-                <li>
-                    <a href="#" onclick="switchView('schedule')" class="nav-link" id="navSchedule">
+                <li id="navScheduleLi" style="display: none;">
+                    <a href="javascript:void(0)" onclick="navigateTo('schedule')" class="nav-link" id="navSchedule">
                         <i class="bi bi-calendar-check"></i> My Schedule
                     </a>
                 </li>
-                <li>
-                    <a href="#" onclick="switchView('admin')" class="nav-link" id="navAdmin">
-                        <i class="bi bi-shield-lock"></i> Admin Portal
+                <li id="navAdminLi" style="display: none;">
+                    <a href="javascript:void(0)" onclick="navigateTo('admin')" class="nav-link" id="navAdmin">
+                        <i class="bi bi-speedometer2"></i> Admin Panel
                     </a>
                 </li>
             </ul>
 
-            <div class="nav-actions">
-                <button onclick="openRegisterModal()" class="btn btn-primary btn-sm">
-                    <i class="bi bi-ticket-perforated-fill"></i> Get Event Pass
-                </button>
+            <div class="nav-actions" id="navActions">
+                <!-- Injected based on active Role -->
             </div>
         </div>
     </header>
 
     <main class="main-content">
         
-        <!-- PUBLIC PORTAL VIEW -->
-        <div id="view-public" class="view-section active">
-            <!-- Hero Section -->
+        <!-- ================= HOME VIEW ================= -->
+        <div id="view-home" class="view-section active">
+            <!-- Hero Section with Drone Video -->
             <section class="hero-section">
-                <div class="container hero-container">
-                    <div class="hero-badge">
-                        <i class="bi bi-patch-check-fill"></i> Official Campus Activity & Scheduling Platform
-                    </div>
-                    <h1 class="hero-title">
-                        Discover, Organize & Experience <span>NSBM Campus Events</span>
-                    </h1>
-                    <p class="hero-description">
-                        Connecting students, faculty clubs, societies, and guest delegates with premier academic symposiums, hackathons, sports championships, and cultural festivals.
-                    </p>
+                <div class="hero-video-wrapper">
+                    <video class="hero-video-bg" id="heroDroneVideo" autoplay muted loop playsinline poster="https://upload.wikimedia.org/wikipedia/commons/8/83/NSBM_Green_University_aerial_view.jpg">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-drone-view-of-a-modern-university-campus-41527-large.mp4" type="video/mp4">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-green-campus-and-buildings-41529-large.mp4" type="video/mp4">
+                    </video>
+                    <div class="hero-overlay"></div>
+                </div>
 
-                    <div class="hero-search-box">
-                        <div class="search-input-group">
-                            <i class="bi bi-search"></i>
-                            <input type="text" id="demoSearchInput" class="search-input" placeholder="Search events by title, club, venue or keyword...">
-                        </div>
-                        <div class="search-input-group">
-                            <i class="bi bi-filter-circle"></i>
-                            <select id="demoCategorySelect" class="search-select">
-                                <option value="all">All Categories</option>
-                                <option value="1">Computing & Tech</option>
-                                <option value="2">Business & Leadership</option>
-                                <option value="3">Sports & Esports</option>
-                                <option value="4">Music & Cultural Arts</option>
-                                <option value="5">Volunteering & Community</option>
-                                <option value="6">Engineering & Robotics</option>
-                            </select>
-                        </div>
-                        <button type="button" onclick="runFilter()" class="btn btn-primary" style="padding: 0.85rem 1.75rem;">
-                            <i class="bi bi-search"></i> Find Events
+                <button type="button" class="hero-video-toggle" id="heroVideoToggle" title="Toggle Drone Camera">
+                    <i class="bi bi-camera-video-fill"></i> <span>Live Drone View</span>
+                </button>
+
+                <div class="container hero-content">
+                    <h1 class="hero-title">Discover, Plan & Participate in <span>NSBM University Events</span></h1>
+                    <p class="hero-subtitle">The official event planning hub for student clubs, hackathons, academic summits, sports championships, and cultural festivals across NSBM Green University.</p>
+                    
+                    <form onsubmit="event.preventDefault(); handleHeroSearch();" class="hero-search-box">
+                        <input type="text" id="heroSearchInput" class="hero-search-input" placeholder="Search events by title, club or venue...">
+                        <select id="heroCategorySelect" class="hero-search-select">
+                            <option value="all">All Categories</option>
+                            <option value="1">Computing & Tech</option>
+                            <option value="2">Business & Leadership</option>
+                            <option value="3">Sports & Esports</option>
+                            <option value="4">Music & Cultural Arts</option>
+                            <option value="5">Volunteering & Community</option>
+                            <option value="6">Engineering & Robotics</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-search"></i> Explore Events
                         </button>
-                    </div>
+                    </form>
                 </div>
             </section>
 
-            <div class="container">
-                <!-- Stats Overview -->
+            <div class="container" style="padding-top: 2rem;">
+                <!-- Stats Overview matching database -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon green"><i class="bi bi-calendar-event"></i></div>
                         <div>
-                            <div class="stat-number">6</div>
+                            <div class="stat-number" id="homeStatEvents">6</div>
                             <div class="stat-label">Published Events</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon gold"><i class="bi bi-ticket-perforated"></i></div>
                         <div>
-                            <div class="stat-number">1,470</div>
+                            <div class="stat-number" id="homeStatRegs">4</div>
                             <div class="stat-label">Event Registrations</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon blue"><i class="bi bi-mortarboard"></i></div>
                         <div>
-                            <div class="stat-number">8,500+</div>
+                            <div class="stat-number">3</div>
                             <div class="stat-label">Active Students</div>
                         </div>
                     </div>
@@ -261,12 +218,15 @@
                 <!-- Featured Section Header -->
                 <div class="section-header">
                     <div>
-                        <h2 class="section-title"><i class="bi bi-fire"></i> Upcoming Campus Events</h2>
-                        <p class="section-subtitle">Reserve your student pass and participate in extracurricular experiences</p>
+                        <h2 class="section-title"><i class="bi bi-fire"></i> Upcoming Featured Events</h2>
+                        <p class="section-subtitle">Reserve your pass and get involved in university life</p>
                     </div>
+                    <button onclick="navigateTo('events')" class="btn btn-secondary">
+                        View All Events <i class="bi bi-arrow-right"></i>
+                    </button>
                 </div>
 
-                <!-- Category Pills Filter -->
+                <!-- Category Filter Bar -->
                 <div class="category-filter-bar">
                     <button class="category-pill active" onclick="setCategoryFilter('all', this)">
                         <i class="bi bi-grid-fill"></i> All Events
@@ -281,43 +241,73 @@
                         <i class="bi bi-trophy"></i> Sports & Esports (1)
                     </button>
                     <button class="category-pill" onclick="setCategoryFilter('4', this)">
-                        <i class="bi bi-music-note-beamed"></i> Music & Arts (1)
+                        <i class="bi bi-music-note-beamed"></i> Music & Cultural Arts (1)
                     </button>
                     <button class="category-pill" onclick="setCategoryFilter('5', this)">
-                        <i class="bi bi-heart"></i> Volunteering (1)
+                        <i class="bi bi-heart"></i> Volunteering & Community (1)
                     </button>
                     <button class="category-pill" onclick="setCategoryFilter('6', this)">
-                        <i class="bi bi-cpu"></i> Engineering (1)
+                        <i class="bi bi-cpu"></i> Engineering & Robotics (1)
                     </button>
                 </div>
 
-                <!-- Event Cards Grid -->
-                <div class="events-grid" id="eventsGridContainer">
-                    <!-- Events will be rendered dynamically -->
+                <!-- Events Grid -->
+                <div class="events-grid" id="homeEventsGrid">
+                    <!-- Injected dynamically -->
                 </div>
             </div>
         </div>
 
-        <!-- MY SCHEDULE VIEW -->
-        <div id="view-schedule" class="view-section">
+        <!-- ================= EVENTS DIRECTORY VIEW ================= -->
+        <div id="view-events" class="view-section">
             <div class="container" style="padding-top: 2rem;">
                 <div class="section-header">
                     <div>
-                        <h1 class="section-title"><i class="bi bi-calendar-check"></i> My Personal Event Schedule</h1>
-                        <p class="section-subtitle">Track confirmed event registrations, access digital e-tickets, and manage attendance</p>
+                        <h1 class="section-title"><i class="bi bi-calendar3"></i> University Events Directory</h1>
+                        <p class="section-subtitle">Discover and register for campus activities, club workshops, competitions, and conferences</p>
                     </div>
-                    <button onclick="switchView('public')" class="btn btn-secondary">
-                        <i class="bi bi-plus-circle"></i> Browse More Events
-                    </button>
                 </div>
 
-                <div id="scheduleContainer" style="display: flex; flex-direction: column; gap: 1.25rem;">
-                    <!-- Registered events timeline rendered here -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-body">
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+                            <div style="flex: 2; min-width: 220px;">
+                                <label class="form-label"><i class="bi bi-search"></i> Keyword Search</label>
+                                <input type="text" id="eventsSearchInput" class="form-control" placeholder="Search event title, club name, or venue...">
+                            </div>
+
+                            <div style="flex: 1; min-width: 180px;">
+                                <label class="form-label"><i class="bi bi-tags"></i> Category</label>
+                                <select id="eventsCategorySelect" class="form-control">
+                                    <option value="all">All Categories</option>
+                                    <option value="1">Computing & Tech</option>
+                                    <option value="2">Business & Leadership</option>
+                                    <option value="3">Sports & Esports</option>
+                                    <option value="4">Music & Cultural Arts</option>
+                                    <option value="5">Volunteering & Community</option>
+                                    <option value="6">Engineering & Robotics</option>
+                                </select>
+                            </div>
+
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button type="button" onclick="runEventsFilter()" class="btn btn-primary">
+                                    <i class="bi bi-filter"></i> Apply Filter
+                                </button>
+                                <button type="button" onclick="resetEventsFilter()" class="btn btn-secondary" title="Reset Filters">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="events-grid" id="directoryEventsGrid">
+                    <!-- Events rendered here -->
                 </div>
             </div>
         </div>
 
-        <!-- ANNOUNCEMENTS VIEW -->
+        <!-- ================= ANNOUNCEMENTS VIEW ================= -->
         <div id="view-announcements" class="view-section">
             <div class="container" style="padding-top: 2rem;">
                 <div class="section-header">
@@ -382,16 +372,35 @@
             </div>
         </div>
 
-        <!-- ADMIN PREVIEW VIEW -->
+        <!-- ================= STUDENT SCHEDULE VIEW ================= -->
+        <div id="view-schedule" class="view-section">
+            <div class="container" style="padding-top: 2rem;">
+                <div class="section-header">
+                    <div>
+                        <h1 class="section-title"><i class="bi bi-calendar-check"></i> My Personal Event Schedule</h1>
+                        <p class="section-subtitle">Track confirmed event registrations, access digital e-tickets, and manage attendance</p>
+                    </div>
+                    <button onclick="navigateTo('events')" class="btn btn-secondary">
+                        <i class="bi bi-plus-circle"></i> Browse More Events
+                    </button>
+                </div>
+
+                <div id="scheduleTimelineContainer" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <!-- Schedule rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ADMIN CONTROL PANEL VIEW ================= -->
         <div id="view-admin" class="view-section">
             <div class="container" style="padding-top: 2rem;">
                 <div class="section-header">
                     <div>
-                        <h1 class="section-title"><i class="bi bi-shield-lock-fill" style="color: var(--danger);"></i> Admin Control Center (Interactive Simulation)</h1>
-                        <p class="section-subtitle">Real-time event administration, category moderation, participant rosters, and broadcast control</p>
+                        <h1 class="section-title"><i class="bi bi-shield-lock-fill" style="color: var(--danger);"></i> Administrator Dashboard</h1>
+                        <p class="section-subtitle">Manage campus events, category taxonomies, participant rosters, and campus broadcast notices</p>
                     </div>
                     <button onclick="openCreateEventModal()" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i> Create New Event
+                        <i class="bi bi-plus-lg"></i> Add New Event
                     </button>
                 </div>
 
@@ -399,14 +408,14 @@
                     <div class="stat-card">
                         <div class="stat-icon green"><i class="bi bi-calendar-check"></i></div>
                         <div>
-                            <div class="stat-number" id="adminTotalEvents">6</div>
+                            <div class="stat-number" id="adminEventsCount">6</div>
                             <div class="stat-label">Total Events</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon gold"><i class="bi bi-people"></i></div>
                         <div>
-                            <div class="stat-number" id="adminTotalRegs">1,470</div>
+                            <div class="stat-number" id="adminRegsCount">4</div>
                             <div class="stat-label">Registrations</div>
                         </div>
                     </div>
@@ -426,38 +435,136 @@
                     </div>
                 </div>
 
-                <div class="table-responsive" style="margin-top: 1.5rem;">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Event Title & Details</th>
-                                <th>Organizing Club</th>
-                                <th>Schedule & Venue</th>
-                                <th>Capacity</th>
-                                <th>Status</th>
-                                <th style="text-align: right;">Quick Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminEventsTableBody">
-                            <!-- Admin rows rendered via JS -->
-                        </tbody>
-                    </table>
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 class="card-title"><i class="bi bi-calendar-event"></i> Manage Campus Events</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Event Title & Category</th>
+                                    <th>Organizing Club</th>
+                                    <th>Date & Venue</th>
+                                    <th>Capacity</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminEventsTableBody">
+                                <!-- Admin rows rendered via JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
+
     </main>
 
-    <!-- EVENT DETAILS & REGISTRATION MODAL -->
-    <div class="modal-backdrop" id="eventModal">
+    <!-- SIGN IN MODAL -->
+    <div class="modal-backdrop" id="loginModal">
         <div class="modal-dialog">
-            <button class="modal-close" onclick="closeModal('eventModal')">&times;</button>
-            <div id="modalEventContent">
-                <!-- Injected via JS -->
+            <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+            <div class="auth-header" style="text-align: center; margin-bottom: 1.5rem;">
+                <div class="auth-logo" style="margin-bottom: 0.75rem;">
+                    <img src="assets/images/logo.jpeg" alt="NSBM EventHub Logo" style="height: 60px; max-width: 100%; object-fit: contain; margin: 0 auto; display: block; border-radius: var(--radius-sm);">
+                </div>
+                <h2 class="auth-title" style="font-size: 1.4rem; font-weight: 700; color: var(--secondary);">Sign In to NSBM EventHub</h2>
+                <p class="auth-subtitle" style="color: var(--text-muted); font-size: 0.875rem;">Select demo credentials or enter your university email</p>
+            </div>
+
+            <div style="margin-bottom: 1.5rem; padding: 1rem; background-color: #f8fafc; border: 1px dashed var(--border-color); border-radius: var(--radius-md); font-size: 0.85rem;">
+                <div style="font-weight: 700; color: var(--secondary); margin-bottom: 0.5rem;">
+                    <i class="bi bi-key-fill" style="color: var(--primary);"></i> One-Click Demo Logins:
+                </div>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button type="button" onclick="loginAs('student')" class="btn btn-secondary btn-sm" style="flex: 1;">
+                        <i class="bi bi-person-fill"></i> Student (Kamal)
+                    </button>
+                    <button type="button" onclick="loginAs('admin')" class="btn btn-secondary btn-sm" style="flex: 1; border-color: var(--danger);">
+                        <i class="bi bi-shield-lock-fill" style="color: var(--danger);"></i> Admin Portal
+                    </button>
+                </div>
+            </div>
+
+            <form onsubmit="handleCustomLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">University Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="kamal.p@students.nsbm.ac.lk" required value="kamal.p@students.nsbm.ac.lk">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required value="student123">
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 0.5rem;">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In to Account
+                </button>
+            </form>
+
+            <div style="margin-top: 1.25rem; text-align: center; font-size: 0.875rem; color: var(--text-muted);">
+                Don't have a student account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openRegisterModal();" style="color: var(--primary); font-weight: 600;">Register Here</a>
             </div>
         </div>
     </div>
 
-    <!-- CREATE EVENT MODAL (ADMIN) -->
+    <!-- STUDENT REGISTER MODAL -->
+    <div class="modal-backdrop" id="registerModal">
+        <div class="modal-dialog">
+            <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+            <div class="auth-header" style="text-align: center; margin-bottom: 1.25rem;">
+                <div class="auth-logo" style="margin-bottom: 0.5rem;">
+                    <img src="assets/images/logo.jpeg" alt="NSBM EventHub Logo" style="height: 54px; max-width: 100%; object-fit: contain; margin: 0 auto; display: block; border-radius: var(--radius-sm);">
+                </div>
+                <h2 class="auth-title" style="font-size: 1.4rem; font-weight: 700; color: var(--secondary);">Create Student Account</h2>
+                <p class="auth-subtitle" style="color: var(--text-muted); font-size: 0.85rem;">Register with your NSBM credentials to join university events</p>
+            </div>
+
+            <form onsubmit="handleStudentRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" id="regFullName" class="form-control" placeholder="e.g. Nethmi Senanayake" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Student ID / Batch *</label>
+                        <input type="text" id="regStudentId" class="form-control" placeholder="NSBM-2024-0550" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Faculty *</label>
+                        <select id="regFaculty" class="form-control" required>
+                            <option value="Faculty of Computing">Faculty of Computing</option>
+                            <option value="Faculty of Business">Faculty of Business</option>
+                            <option value="Faculty of Engineering">Faculty of Engineering</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">University Email *</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="nethmi.s@students.nsbm.ac.lk" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password *</label>
+                    <input type="password" id="regPass" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                    <i class="bi bi-person-check-fill"></i> Complete Registration
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- EVENT DETAILS & PASS REGISTRATION MODAL -->
+    <div class="modal-backdrop" id="eventModal">
+        <div class="modal-dialog">
+            <button class="modal-close" onclick="closeModal('eventModal')">&times;</button>
+            <div id="modalEventContent">
+                <!-- Injected based on Event & Role state -->
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATE EVENT MODAL (ADMIN ONLY) -->
     <div class="modal-backdrop" id="createEventModal">
         <div class="modal-dialog">
             <button class="modal-close" onclick="closeModal('createEventModal')">&times;</button>
@@ -491,7 +598,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Date</label>
-                        <input type="date" id="newEventDate" class="form-control" value="2026-11-05" required>
+                        <input type="date" id="newEventDate" class="form-control" value="2026-11-15" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Capacity (Max Seats)</label>
@@ -513,7 +620,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Global Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
@@ -524,27 +631,33 @@
                     <p style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">
                         The official event planning and scheduling system for NSBM Green University. Empowering university clubs, societies, and students to discover, organize, and participate in academic and extracurricular experiences.
                     </p>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <a href="https://facebook.com" target="_blank" class="btn btn-secondary btn-icon" style="background: #1e293b; color: #fff; border-color: #334155;"><i class="bi bi-facebook"></i></a>
+                        <a href="https://instagram.com" target="_blank" class="btn btn-secondary btn-icon" style="background: #1e293b; color: #fff; border-color: #334155;"><i class="bi bi-instagram"></i></a>
+                        <a href="https://linkedin.com" target="_blank" class="btn btn-secondary btn-icon" style="background: #1e293b; color: #fff; border-color: #334155;"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://youtube.com" target="_blank" class="btn btn-secondary btn-icon" style="background: #1e293b; color: #fff; border-color: #334155;"><i class="bi bi-youtube"></i></a>
+                    </div>
                 </div>
 
                 <div>
                     <h4 class="footer-title">Quick Navigation</h4>
                     <ul class="footer-links">
-                        <li><a href="#" onclick="switchView('public')">Home Portal</a></li>
-                        <li><a href="#" onclick="switchView('public')">Browse All Events</a></li>
-                        <li><a href="#" onclick="switchView('announcements')">Campus Notices</a></li>
-                        <li><a href="#" onclick="switchView('schedule')">Student Schedule</a></li>
-                        <li><a href="#" onclick="switchView('admin')">Admin Center</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('home')">Home</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('events')">Browse All Events</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('announcements')">Announcements</a></li>
+                        <li><a href="javascript:void(0)" onclick="navigateTo('schedule')">Personal Schedule</a></li>
+                        <li><a href="javascript:void(0)" onclick="openLoginModal()">Portal Sign In</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 class="footer-title">Faculties & Clubs</h4>
                     <ul class="footer-links">
-                        <li><a href="#" onclick="setCategoryFilter('1', null); switchView('public');">Faculty of Computing</a></li>
-                        <li><a href="#" onclick="setCategoryFilter('2', null); switchView('public');">Faculty of Business</a></li>
-                        <li><a href="#" onclick="setCategoryFilter('6', null); switchView('public');">Faculty of Engineering</a></li>
-                        <li><a href="#" onclick="setCategoryFilter('3', null); switchView('public');">NSBM Sports Council</a></li>
-                        <li><a href="#" onclick="setCategoryFilter('4', null); switchView('public');">Music & Cultural Circle</a></li>
+                        <li><a href="javascript:void(0)" onclick="setCategoryFilter('1', null); navigateTo('events');">Faculty of Computing</a></li>
+                        <li><a href="javascript:void(0)" onclick="setCategoryFilter('2', null); navigateTo('events');">Faculty of Business</a></li>
+                        <li><a href="javascript:void(0)" onclick="setCategoryFilter('6', null); navigateTo('events');">Faculty of Engineering</a></li>
+                        <li><a href="javascript:void(0)" onclick="setCategoryFilter('3', null); navigateTo('events');">NSBM Sports Council</a></li>
+                        <li><a href="javascript:void(0)" onclick="setCategoryFilter('4', null); navigateTo('events');">Music & Cultural Circle</a></li>
                     </ul>
                 </div>
 
@@ -572,15 +685,17 @@
                     &copy; 2026 NSBM Green University. All rights reserved. NSBM EventHub System.
                 </div>
                 <div style="display: flex; gap: 1.5rem;">
-                    <a href="https://github.com/sanuthwimalawardenait-pixel/NSBM_event_hub" target="_blank" style="color: #94a3b8;"><i class="bi bi-github"></i> GitHub Repository</a>
+                    <a href="javascript:void(0)" onclick="loginAs('admin')" style="color: #94a3b8;">Admin Login</a>
+                    <a href="https://github.com/sanuthwimalawardenait-pixel/NSBM_event_hub" target="_blank" style="color: #94a3b8;"><i class="bi bi-github"></i> GitHub Source</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Interactive Simulator JS -->
+    <!-- Role-Based State Machine & Application Logic -->
     <script>
-        const initialEvents = [
+        // Database events state matching MySQL seed data
+        const databaseEvents = [
             {
                 id: 1,
                 categoryId: "1",
@@ -594,9 +709,11 @@
                 startTime: "09:00 AM",
                 endTime: "06:00 PM",
                 capacity: 120,
-                registered: 96,
-                isRegistered: true,
-                ticketCode: "NSBM-E1-U101-8F32"
+                registered: 2, // Kamal & Nipuna
+                registrations: [
+                    { userId: 2, userName: "Kamal Perera", ticketCode: "TKT-CB26-0129-8812", specialReqs: "Vegetarian meal requested" },
+                    { userId: 4, userName: "Nipuna Jayawardena", ticketCode: "TKT-CB26-0891-7734", specialReqs: "Need access for laptop charger" }
+                ]
             },
             {
                 id: 2,
@@ -611,9 +728,10 @@
                 startTime: "10:00 AM",
                 endTime: "03:30 PM",
                 capacity: 300,
-                registered: 215,
-                isRegistered: true,
-                ticketCode: "NSBM-E2-U101-44B1"
+                registered: 1, // Kamal
+                registrations: [
+                    { userId: 2, userName: "Kamal Perera", ticketCode: "TKT-FL26-0129-9943", specialReqs: "None" }
+                ]
             },
             {
                 id: 3,
@@ -628,9 +746,10 @@
                 startTime: "08:30 AM",
                 endTime: "05:00 PM",
                 capacity: 500,
-                registered: 410,
-                isRegistered: false,
-                ticketCode: null
+                registered: 1, // Sanduni
+                registrations: [
+                    { userId: 3, userName: "Sanduni Silva", ticketCode: "TKT-CC26-0458-1205", specialReqs: "Cheering squad coordinator" }
+                ]
             },
             {
                 id: 4,
@@ -645,9 +764,8 @@
                 startTime: "06:00 PM",
                 endTime: "10:00 PM",
                 capacity: 250,
-                registered: 185,
-                isRegistered: false,
-                ticketCode: null
+                registered: 0,
+                registrations: []
             },
             {
                 id: 5,
@@ -662,9 +780,8 @@
                 startTime: "07:30 AM",
                 endTime: "12:00 PM",
                 capacity: 150,
-                registered: 120,
-                isRegistered: false,
-                ticketCode: null
+                registered: 0,
+                registrations: []
             },
             {
                 id: 6,
@@ -679,20 +796,299 @@
                 startTime: "09:30 AM",
                 endTime: "04:00 PM",
                 capacity: 200,
-                registered: 144,
-                isRegistered: false,
-                ticketCode: null
+                registered: 0,
+                registrations: []
             }
         ];
 
-        let events = [...initialEvents];
+        let events = [...databaseEvents];
+        let currentUser = null; // null = Guest, { id: 2, name: 'Kamal Perera', role: 'student', studentId: 'NSBM-2024-0129', faculty: 'Faculty of Computing' }, { id: 1, name: 'NSBM Admin', role: 'admin' }
         let currentCategory = 'all';
+        let pendingEventRedirect = null;
+
+        // User Accounts Database
+        const accounts = {
+            admin: {
+                id: 1,
+                name: "NSBM Admin",
+                email: "admin@nsbm.ac.lk",
+                role: "admin",
+                studentId: "ADM-001",
+                faculty: "Administration"
+            },
+            student: {
+                id: 2,
+                name: "Kamal Perera",
+                email: "kamal.p@students.nsbm.ac.lk",
+                role: "student",
+                studentId: "NSBM-2024-0129",
+                faculty: "Faculty of Computing"
+            }
+        };
+
+        // Render Navbar based on Active Role
+        function updateNavbar() {
+            const navScheduleLi = document.getElementById('navScheduleLi');
+            const navAdminLi = document.getElementById('navAdminLi');
+            const navActions = document.getElementById('navActions');
+
+            if (!currentUser) {
+                // Guest / Unauthenticated
+                navScheduleLi.style.display = 'none';
+                navAdminLi.style.display = 'none';
+                navActions.innerHTML = `
+                    <button onclick="openLoginModal()" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-box-arrow-in-right"></i> Sign In
+                    </button>
+                    <button onclick="openRegisterModal()" class="btn btn-primary btn-sm">
+                        <i class="bi bi-person-plus"></i> Register
+                    </button>
+                `;
+            } else if (currentUser.role === 'student') {
+                // Student Session
+                navScheduleLi.style.display = 'inline-block';
+                navAdminLi.style.display = 'none';
+                navActions.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.6rem;">
+                        <button onclick="navigateTo('schedule')" class="btn btn-secondary btn-sm" title="My Profile & Schedule">
+                            <i class="bi bi-person-circle"></i>
+                            <span>${currentUser.name}</span>
+                            <span class="badge badge-registered">Student</span>
+                        </button>
+                        <button onclick="handleSignOut()" class="btn btn-outline-danger btn-sm" title="Sign Out">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            } else if (currentUser.role === 'admin') {
+                // Administrator Session
+                navScheduleLi.style.display = 'none';
+                navAdminLi.style.display = 'inline-block';
+                navActions.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.6rem;">
+                        <button onclick="navigateTo('admin')" class="btn btn-secondary btn-sm" title="Admin Control Center">
+                            <i class="bi bi-shield-lock-fill" style="color: var(--danger);"></i>
+                            <span>${currentUser.name}</span>
+                            <span class="badge badge-urgent">Admin</span>
+                        </button>
+                        <button onclick="handleSignOut()" class="btn btn-outline-danger btn-sm" title="Sign Out">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Navigation Switcher with Role Guarding
+        function navigateTo(viewName) {
+            // Role Guards
+            if (viewName === 'schedule') {
+                if (!currentUser) {
+                    showFlash('warning', 'Please sign in with your student credentials to view your personal schedule.');
+                    pendingEventRedirect = null;
+                    openLoginModal();
+                    return;
+                } else if (currentUser.role !== 'student') {
+                    showFlash('warning', 'Personal event schedules are reserved for registered student accounts.');
+                    return;
+                }
+            } else if (viewName === 'admin') {
+                if (!currentUser || currentUser.role !== 'admin') {
+                    showFlash('danger', 'Access denied. Administrator privileges are required to access this module.');
+                    return;
+                }
+            }
+
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+
+            const targetView = document.getElementById('view-' + viewName);
+            if (targetView) targetView.classList.add('active');
+
+            if (viewName === 'home') document.getElementById('navHome')?.classList.add('active');
+            if (viewName === 'events') document.getElementById('navEvents')?.classList.add('active');
+            if (viewName === 'announcements') document.getElementById('navAnnouncements')?.classList.add('active');
+            if (viewName === 'schedule') {
+                document.getElementById('navSchedule')?.classList.add('active');
+                renderSchedule();
+            }
+            if (viewName === 'admin') {
+                document.getElementById('navAdmin')?.classList.add('active');
+                renderAdminTable();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Flash Notification Toast
+        function showFlash(type, message) {
+            const container = document.getElementById('flashToastContainer');
+            const alertClass = type === 'success' ? 'alert-success' : (type === 'danger' ? 'alert-danger' : 'alert-warning');
+            const icon = type === 'success' ? 'bi-check-circle-fill' : (type === 'danger' ? 'bi-exclamation-octagon-fill' : 'bi-info-circle-fill');
+
+            const toast = document.createElement('div');
+            toast.className = `alert ${alertClass} flash-toast`;
+            toast.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="bi ${icon}"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button type="button" class="alert-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+                </div>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 4500);
+        }
+
+        // Login Handler
+        function loginAs(role) {
+            currentUser = accounts[role];
+            updateNavbar();
+            closeModal('loginModal');
+            showFlash('success', `Welcome back, ${currentUser.name}! Signed in as ${currentUser.role}.`);
+
+            if (pendingEventRedirect) {
+                const evtId = pendingEventRedirect;
+                pendingEventRedirect = null;
+                openEventDetails(evtId);
+            } else if (currentUser.role === 'admin') {
+                navigateTo('admin');
+            } else {
+                renderEvents();
+            }
+        }
+
+        function handleCustomLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            if (email.includes('admin')) {
+                loginAs('admin');
+            } else {
+                loginAs('student');
+            }
+        }
+
+        function handleStudentRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regFullName').value.trim();
+            const sid = document.getElementById('regStudentId').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const faculty = document.getElementById('regFaculty').value;
+
+            currentUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                role: "student",
+                studentId: sid,
+                faculty: faculty
+            };
+
+            updateNavbar();
+            closeModal('registerModal');
+            showFlash('success', `Welcome to NSBM EventHub, ${name}! Your student account is active.`);
+
+            if (pendingEventRedirect) {
+                const evtId = pendingEventRedirect;
+                pendingEventRedirect = null;
+                openEventDetails(evtId);
+            } else {
+                navigateTo('events');
+            }
+        }
+
+        function handleSignOut() {
+            currentUser = null;
+            updateNavbar();
+            showFlash('info', 'You have signed out successfully.');
+            navigateTo('home');
+            renderEvents();
+        }
+
+        // Render Event Cards
+        function createEventCardHTML(e) {
+            const dateObj = new Date(e.date);
+            const month = dateObj.toLocaleString('en-US', { month: 'short' });
+            const day = dateObj.getDate();
+            const seatsLeft = Math.max(0, e.capacity - e.registered);
+            const pctFilled = Math.min(100, Math.round((e.registered / e.capacity) * 100));
+            const barClass = pctFilled >= 90 ? 'danger' : (pctFilled >= 70 ? 'warning' : '');
+            
+            const isUserRegistered = currentUser && e.registrations.some(r => r.userId === currentUser.id);
+
+            return `
+                <div class="event-card">
+                    <div class="event-card-header" style="background-image: linear-gradient(135deg, rgba(0, 104, 56, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%);">
+                        <div class="event-date-badge">
+                            <div class="event-date-month">${month}</div>
+                            <div class="event-date-day">${day}</div>
+                        </div>
+                        <span class="event-category-tag" style="border-left: 3px solid ${e.categoryColor};">
+                            ${e.categoryName}
+                        </span>
+                        <div class="event-club-meta">
+                            <i class="bi bi-people-fill"></i> ${e.club}
+                        </div>
+                    </div>
+                    <div class="event-card-body">
+                        <h3 class="event-title">
+                            <a href="javascript:void(0)" onclick="openEventDetails(${e.id})">${e.title}</a>
+                        </h3>
+                        <p class="event-description">${e.description}</p>
+                        
+                        <ul class="event-meta-list">
+                            <li class="event-meta-item">
+                                <i class="bi bi-clock"></i>
+                                <span>${e.startTime} - ${e.endTime}</span>
+                            </li>
+                            <li class="event-meta-item">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>${e.venue}</span>
+                            </li>
+                        </ul>
+
+                        <div class="event-capacity-bar-wrapper">
+                            <div class="event-capacity-label">
+                                <span><i class="bi bi-people"></i> ${e.registered} / ${e.capacity} Registered</span>
+                                <span style="font-weight: 700; color: ${seatsLeft <= 10 ? 'var(--danger)' : 'var(--primary)'};">
+                                    ${seatsLeft} seats left
+                                </span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill ${barClass}" style="width: ${pctFilled}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-footer">
+                            <button onclick="openEventDetails(${e.id})" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-info-circle"></i> Details
+                            </button>
+                            ${isUserRegistered ? `
+                                <button onclick="openEventDetails(${e.id})" class="btn btn-secondary btn-sm" style="color: var(--primary); font-weight: 700;">
+                                    <i class="bi bi-check-circle-fill"></i> Pass Confirmed
+                                </button>
+                            ` : `
+                                <button onclick="openEventDetails(${e.id})" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-ticket-perforated"></i> Register
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
         function renderEvents() {
-            const container = document.getElementById('eventsGridContainer');
-            if (!container) return;
+            const homeContainer = document.getElementById('homeEventsGrid');
+            const dirContainer = document.getElementById('directoryEventsGrid');
 
-            const query = (document.getElementById('demoSearchInput')?.value || '').toLowerCase().trim();
+            const query = (document.getElementById('eventsSearchInput')?.value || '').toLowerCase().trim();
             const cat = currentCategory;
 
             const filtered = events.filter(e => {
@@ -701,201 +1097,127 @@
                 return matchCat && matchQuery;
             });
 
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
-                        <i class="bi bi-search" style="font-size: 3rem; color: var(--text-light); margin-bottom: 1rem; display: block;"></i>
-                        <h3>No matching events found</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 1rem;">Try searching with different terms or selecting another category.</p>
-                        <button onclick="resetFilters()" class="btn btn-secondary">Reset Filters</button>
-                    </div>
-                `;
-                return;
+            if (homeContainer) {
+                homeContainer.innerHTML = filtered.slice(0, 6).map(createEventCardHTML).join('');
+            }
+            if (dirContainer) {
+                if (filtered.length === 0) {
+                    dirContainer.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                            <i class="bi bi-search" style="font-size: 3rem; color: var(--text-light); margin-bottom: 1rem; display: block;"></i>
+                            <h3>No matching events found</h3>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">Try searching with different terms or selecting another category.</p>
+                            <button onclick="resetEventsFilter()" class="btn btn-secondary">Reset Filters</button>
+                        </div>
+                    `;
+                } else {
+                    dirContainer.innerHTML = filtered.map(createEventCardHTML).join('');
+                }
             }
 
-            container.innerHTML = filtered.map(e => {
-                const dateObj = new Date(e.date);
-                const month = dateObj.toLocaleString('en-US', { month: 'short' });
-                const day = dateObj.getDate();
-                const seatsLeft = Math.max(0, e.capacity - e.registered);
-                const pctFilled = Math.min(100, Math.round((e.registered / e.capacity) * 100));
-                const barClass = pctFilled >= 90 ? 'danger' : (pctFilled >= 70 ? 'warning' : '');
-
-                return `
-                    <div class="event-card">
-                        <div class="event-card-header" style="background-image: linear-gradient(135deg, rgba(0, 104, 56, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%);">
-                            <div class="event-date-badge">
-                                <div class="event-date-month">${month}</div>
-                                <div class="event-date-day">${day}</div>
-                            </div>
-                            <span class="event-category-tag" style="border-left: 3px solid ${e.categoryColor};">
-                                ${e.categoryName}
-                            </span>
-                            <div class="event-club-meta">
-                                <i class="bi bi-people-fill"></i> ${e.club}
-                            </div>
-                        </div>
-                        <div class="event-card-body">
-                            <h3 class="event-title">
-                                <a href="javascript:void(0)" onclick="openEventDetails(${e.id})">${e.title}</a>
-                            </h3>
-                            <p class="event-description">${e.description}</p>
-                            
-                            <ul class="event-meta-list">
-                                <li class="event-meta-item">
-                                    <i class="bi bi-clock"></i>
-                                    <span>${e.startTime} - ${e.endTime}</span>
-                                </li>
-                                <li class="event-meta-item">
-                                    <i class="bi bi-geo-alt"></i>
-                                    <span>${e.venue}</span>
-                                </li>
-                            </ul>
-
-                            <div class="event-capacity-bar-wrapper">
-                                <div class="event-capacity-label">
-                                    <span><i class="bi bi-people"></i> ${e.registered} / ${e.capacity} Registered</span>
-                                    <span style="font-weight: 700; color: ${seatsLeft <= 15 ? 'var(--danger)' : 'var(--primary)'};">
-                                        ${seatsLeft} seats left
-                                    </span>
-                                </div>
-                                <div class="progress-bar-container">
-                                    <div class="progress-bar-fill ${barClass}" style="width: ${pctFilled}%;"></div>
-                                </div>
-                            </div>
-
-                            <div class="event-card-footer">
-                                ${e.isRegistered ? `
-                                    <span class="badge badge-registered" style="font-size: 0.85rem; padding: 0.5rem 0.8rem;">
-                                        <i class="bi bi-check-circle-fill"></i> Pass Confirmed
-                                    </span>
-                                    <button onclick="openEventDetails(${e.id})" class="btn btn-secondary btn-sm">
-                                        View Ticket
-                                    </button>
-                                ` : `
-                                    <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
-                                        <i class="bi bi-ticket-perforated"></i> Free Admission
-                                    </span>
-                                    <button onclick="openEventDetails(${e.id})" class="btn btn-primary btn-sm">
-                                        Get Pass <i class="bi bi-arrow-right"></i>
-                                    </button>
-                                `}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            // Sync Stats
+            const totalRegs = events.reduce((acc, c) => acc + c.registered, 0);
+            const homeStatEvents = document.getElementById('homeStatEvents');
+            const homeStatRegs = document.getElementById('homeStatRegs');
+            if (homeStatEvents) homeStatEvents.innerText = events.length;
+            if (homeStatRegs) homeStatRegs.innerText = totalRegs;
         }
 
-        function renderSchedule() {
-            const container = document.getElementById('scheduleContainer');
-            if (!container) return;
-
-            const registeredEvents = events.filter(e => e.isRegistered);
-
-            if (registeredEvents.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 4rem 1rem; background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
-                        <i class="bi bi-calendar-x" style="font-size: 3.5rem; color: var(--text-light); margin-bottom: 1rem; display: block;"></i>
-                        <h3>Your Event Schedule is Currently Empty</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Explore upcoming campus events and reserve your digital student passes.</p>
-                        <button onclick="switchView('public')" class="btn btn-primary">
-                            <i class="bi bi-search"></i> Browse Campus Events
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = registeredEvents.map(e => `
-                <div class="card" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-                        <div>
-                            <span class="badge badge-registered" style="margin-bottom: 0.5rem; display: inline-block;">
-                                <i class="bi bi-check-circle-fill"></i> Confirmed Registration
-                            </span>
-                            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.25rem;">${e.title}</h3>
-                            <div style="color: var(--text-muted); font-size: 0.875rem;">
-                                <i class="bi bi-people-fill"></i> Organized by ${e.club}
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-family: monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; background: var(--primary-subtle); padding: 0.35rem 0.75rem; border-radius: 6px; display: inline-block;">
-                                ${e.ticketCode}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-main); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 0.75rem 0;">
-                        <div><i class="bi bi-calendar3" style="color: var(--primary);"></i> ${e.date}</div>
-                        <div><i class="bi bi-clock" style="color: var(--primary);"></i> ${e.startTime} - ${e.endTime}</div>
-                        <div><i class="bi bi-geo-alt" style="color: var(--primary);"></i> ${e.venue}</div>
-                    </div>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">
-                            <i class="bi bi-info-circle"></i> Present this ticket code or QR upon entrance.
-                        </span>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button onclick="openEventDetails(${e.id})" class="btn btn-secondary btn-sm">
-                                <i class="bi bi-qr-code"></i> View Ticket Pass
-                            </button>
-                            <button onclick="cancelRegistration(${e.id})" class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-x-circle"></i> Cancel Pass
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderAdminTable() {
-            const tbody = document.getElementById('adminEventsTableBody');
-            if (!tbody) return;
-
-            tbody.innerHTML = events.map(e => `
-                <tr>
-                    <td>
-                        <strong style="color: var(--secondary); display: block;">${e.title}</strong>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">${e.categoryName}</span>
-                    </td>
-                    <td>${e.club}</td>
-                    <td>
-                        <div><i class="bi bi-calendar3"></i> ${e.date}</div>
-                        <small style="color: var(--text-muted);"><i class="bi bi-geo-alt"></i> ${e.venue}</small>
-                    </td>
-                    <td>
-                        <strong>${e.registered}</strong> / ${e.capacity}
-                        <div class="progress-bar-container" style="height: 4px; width: 80px; margin-top: 4px;">
-                            <div class="progress-bar-fill" style="width: ${Math.round((e.registered/e.capacity)*100)}%;"></div>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-upcoming">Upcoming</span>
-                    </td>
-                    <td style="text-align: right;">
-                        <button onclick="openEventDetails(${e.id})" class="btn btn-secondary btn-sm" title="View Details">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        <button onclick="deleteEvent(${e.id})" class="btn btn-outline-danger btn-sm" title="Delete Event">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-
-            const adminEventsEl = document.getElementById('adminTotalEvents');
-            const adminRegsEl = document.getElementById('adminTotalRegs');
-            if (adminEventsEl) adminEventsEl.innerText = events.length;
-            if (adminRegsEl) adminRegsEl.innerText = events.reduce((acc, c) => acc + c.registered, 0).toLocaleString();
-        }
-
+        // Open Event Details with Role-Based Action Logic
         function openEventDetails(id) {
             const e = events.find(item => item.id === id);
             if (!e) return;
 
             const modalContent = document.getElementById('modalEventContent');
             const seatsLeft = Math.max(0, e.capacity - e.registered);
+            const userReg = currentUser ? e.registrations.find(r => r.userId === currentUser.id) : null;
+            const isUserRegistered = userReg ? true : false;
+            const isFull = seatsLeft <= 0;
+
+            let registrationSectionHTML = '';
+
+            if (isUserRegistered) {
+                // Student Already Registered -> View E-Pass
+                registrationSectionHTML = `
+                    <div class="alert alert-success" style="margin-bottom: 1rem;">
+                        <i class="bi bi-check-circle-fill"></i> You are registered for this event.
+                    </div>
+                    <div class="ticket-pass">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--primary);">Official Student E-Pass</span>
+                                <div style="font-size: 1.25rem; font-family: monospace; font-weight: 800; color: var(--secondary); margin-top: 0.2rem;">
+                                    ${userReg.ticketCode}
+                                </div>
+                            </div>
+                            <div style="background: #ffffff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;">
+                                <i class="bi bi-qr-code" style="font-size: 2.5rem; color: var(--secondary);"></i>
+                            </div>
+                        </div>
+                        <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted);">
+                            Pass assigned to <strong>${currentUser.name}</strong> (${currentUser.studentId || 'Student'}).
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
+                        <button onclick="window.print()" class="btn btn-secondary" style="flex: 1;">
+                            <i class="bi bi-printer"></i> Print Pass
+                        </button>
+                        <button onclick="cancelEventRegistration(${e.id})" class="btn btn-outline-danger">
+                            Cancel Pass
+                        </button>
+                    </div>
+                `;
+            } else if (isFull) {
+                // Capacity Reached
+                registrationSectionHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-x-circle-fill"></i> Registrations are closed (Maximum Capacity Reached).
+                    </div>
+                `;
+            } else if (!currentUser) {
+                // Guest / Not Logged In -> Must Log In
+                registrationSectionHTML = `
+                    <div style="text-align: center; padding: 0.5rem 0;">
+                        <div style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                            <i class="bi bi-shield-lock" style="font-size: 1.75rem; color: var(--primary); display: block; margin-bottom: 0.35rem;"></i>
+                            <strong style="color: var(--secondary);">Login Required to Register</strong>
+                            <p style="margin-top: 0.25rem;">You must be signed in with a student account to book your event pass.</p>
+                        </div>
+                        <button onclick="pendingEventRedirect = ${e.id}; closeModal('eventModal'); openLoginModal();" class="btn btn-primary btn-lg" style="width: 100%; margin-bottom: 0.75rem;">
+                            <i class="bi bi-box-arrow-in-right"></i> Sign In to Register
+                        </button>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">
+                            New student? <a href="javascript:void(0)" onclick="pendingEventRedirect = ${e.id}; closeModal('eventModal'); openRegisterModal();" style="font-weight: 600; color: var(--primary);">Create Account</a>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === 'student') {
+                // Student Logged In -> Can Register
+                registrationSectionHTML = `
+                    <form onsubmit="confirmStudentRegistration(event, ${e.id})">
+                        <div class="form-group">
+                            <label class="form-label" for="specialReqsInput">Special Requirements (Optional)</label>
+                            <textarea id="specialReqsInput" class="form-control" rows="2" placeholder="e.g. Dietary preferences, team name, accessibility..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                            <i class="bi bi-ticket-perforated-fill"></i> Confirm Registration
+                        </button>
+                    </form>
+                `;
+            } else if (currentUser.role === 'admin') {
+                // Admin Logged In -> Admin Actions
+                registrationSectionHTML = `
+                    <div style="text-align: center; padding: 0.5rem 0;">
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            <span class="badge badge-urgent" style="margin-bottom: 0.5rem; display: inline-block;">Administrator Access</span>
+                            <p>You have full managerial privileges over this campus event.</p>
+                        </div>
+                        <button onclick="closeModal('eventModal'); navigateTo('admin');" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">
+                            <i class="bi bi-people-fill"></i> Manage Registrations (${e.registered})
+                        </button>
+                    </div>
+                `;
+            }
 
             modalContent.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
@@ -931,74 +1253,172 @@
                     </div>
                 </div>
 
-                ${e.isRegistered ? `
-                    <div class="ticket-pass">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--primary);">Official Student E-Pass</span>
-                                <div style="font-size: 1.2rem; font-family: monospace; font-weight: 800; color: var(--secondary); margin-top: 0.2rem;">
-                                    ${e.ticketCode}
-                                </div>
-                            </div>
-                            <div style="background: #ffffff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;">
-                                <i class="bi bi-qr-code" style="font-size: 2.5rem; color: var(--secondary);"></i>
-                            </div>
-                        </div>
-                        <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted);">
-                            Pass assigned to <strong>Kamal Perera</strong> (NSBM-2024-0129). Present at entrance.
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
-                        <button onclick="window.print()" class="btn btn-secondary" style="flex: 1;">
-                            <i class="bi bi-printer"></i> Print Pass
-                        </button>
-                        <button onclick="cancelRegistration(${e.id}); closeModal('eventModal');" class="btn btn-outline-danger">
-                            Cancel Pass
-                        </button>
-                    </div>
-                ` : `
-                    <button onclick="registerForEvent(${e.id})" class="btn btn-primary btn-lg" style="width: 100%;">
-                        <i class="bi bi-ticket-perforated-fill"></i> Confirm Free Pass Registration
-                    </button>
-                `}
+                ${registrationSectionHTML}
             `;
 
             document.getElementById('eventModal').classList.add('open');
         }
 
-        function registerForEvent(id) {
-            const e = events.find(item => item.id === id);
+        // Student Registration Action
+        function confirmStudentRegistration(event, eventId) {
+            event.preventDefault();
+            if (!currentUser || currentUser.role !== 'student') {
+                showFlash('warning', 'Please sign in with a student account.');
+                return;
+            }
+
+            const e = events.find(item => item.id === eventId);
             if (!e) return;
 
-            e.isRegistered = true;
+            const specialReqs = document.getElementById('specialReqsInput')?.value.trim() || 'None';
+            const ticketCode = `NSBM-E${e.id}-U${currentUser.id}-${Math.floor(1000 + Math.random() * 9000)}`;
+
             e.registered += 1;
-            e.ticketCode = `NSBM-E${e.id}-U101-${Math.floor(1000 + Math.random() * 9000)}`;
+            e.registrations.push({
+                userId: currentUser.id,
+                userName: currentUser.name,
+                ticketCode: ticketCode,
+                specialReqs: specialReqs
+            });
 
             renderEvents();
-            renderSchedule();
-            renderAdminTable();
-            openEventDetails(id);
+            showFlash('success', `Registration confirmed for ${e.title}! Pass: ${ticketCode}`);
+            openEventDetails(eventId);
         }
 
-        function cancelRegistration(id) {
-            const e = events.find(item => item.id === id);
+        function cancelEventRegistration(eventId) {
+            if (!currentUser) return;
+            const e = events.find(item => item.id === eventId);
             if (!e) return;
 
-            e.isRegistered = false;
+            e.registrations = e.registrations.filter(r => r.userId !== currentUser.id);
             e.registered = Math.max(0, e.registered - 1);
-            e.ticketCode = null;
 
             renderEvents();
             renderSchedule();
-            renderAdminTable();
+            showFlash('info', 'Your event pass has been cancelled.');
+            openEventDetails(eventId);
+        }
+
+        // Render Schedule View
+        function renderSchedule() {
+            const container = document.getElementById('scheduleTimelineContainer');
+            if (!container) return;
+
+            if (!currentUser || currentUser.role !== 'student') {
+                container.innerHTML = `<div class="alert alert-warning">Please sign in to view your schedule.</div>`;
+                return;
+            }
+
+            const myEvents = events.filter(e => e.registrations.some(r => r.userId === currentUser.id));
+
+            if (myEvents.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 1rem; background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                        <i class="bi bi-calendar-x" style="font-size: 3.5rem; color: var(--text-light); margin-bottom: 1rem; display: block;"></i>
+                        <h3>Your Event Schedule is Currently Empty</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Explore upcoming campus events and reserve your digital student passes.</p>
+                        <button onclick="navigateTo('events')" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Browse Campus Events
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = myEvents.map(e => {
+                const reg = e.registrations.find(r => r.userId === currentUser.id);
+                return `
+                    <div class="card" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <span class="badge badge-registered" style="margin-bottom: 0.5rem; display: inline-block;">
+                                    <i class="bi bi-check-circle-fill"></i> Confirmed Registration
+                                </span>
+                                <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.25rem;">${e.title}</h3>
+                                <div style="color: var(--text-muted); font-size: 0.875rem;">
+                                    <i class="bi bi-people-fill"></i> Organized by ${e.club}
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-family: monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; background: var(--primary-subtle); padding: 0.35rem 0.75rem; border-radius: 6px; display: inline-block;">
+                                    ${reg.ticketCode}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-main); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 0.75rem 0;">
+                            <div><i class="bi bi-calendar3" style="color: var(--primary);"></i> ${e.date}</div>
+                            <div><i class="bi bi-clock" style="color: var(--primary);"></i> ${e.startTime} - ${e.endTime}</div>
+                            <div><i class="bi bi-geo-alt" style="color: var(--primary);"></i> ${e.venue}</div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">
+                                <i class="bi bi-info-circle"></i> Present this digital pass or QR at entrance.
+                            </span>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button onclick="openEventDetails(${e.id})" class="btn btn-secondary btn-sm">
+                                    <i class="bi bi-qr-code"></i> View Ticket Pass
+                                </button>
+                                <button onclick="cancelEventRegistration(${e.id})" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-x-circle"></i> Cancel Pass
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render Admin Table
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminEventsTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = events.map(e => `
+                <tr>
+                    <td>
+                        <strong style="color: var(--secondary); display: block;">${e.title}</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">${e.categoryName}</span>
+                    </td>
+                    <td>${e.club}</td>
+                    <td>
+                        <div><i class="bi bi-calendar3"></i> ${e.date}</div>
+                        <small style="color: var(--text-muted);"><i class="bi bi-geo-alt"></i> ${e.venue}</small>
+                    </td>
+                    <td>
+                        <strong>${e.registered}</strong> / ${e.capacity}
+                        <div class="progress-bar-bg" style="height: 4px; width: 80px; margin-top: 4px;">
+                            <div class="progress-bar-fill" style="width: ${Math.round((e.registered/e.capacity)*100)}%;"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge badge-upcoming">Upcoming</span>
+                    </td>
+                    <td style="text-align: right;">
+                        <button onclick="openEventDetails(${e.id})" class="btn btn-secondary btn-sm" title="View Details">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button onclick="deleteEvent(${e.id})" class="btn btn-outline-danger btn-sm" title="Delete Event">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            const adminEventsCount = document.getElementById('adminEventsCount');
+            const adminRegsCount = document.getElementById('adminRegsCount');
+            if (adminEventsCount) adminEventsCount.innerText = events.length;
+            if (adminRegsCount) adminRegsCount.innerText = events.reduce((acc, c) => acc + c.registered, 0);
         }
 
         function deleteEvent(id) {
             if (confirm("Are you sure you want to remove this campus event?")) {
                 events = events.filter(e => e.id !== id);
                 renderEvents();
-                renderSchedule();
                 renderAdminTable();
+                showFlash('info', 'Event deleted from system.');
             }
         }
 
@@ -1035,55 +1455,34 @@
                 endTime: "04:00 PM",
                 capacity: capacity,
                 registered: 0,
-                isRegistered: false,
-                ticketCode: null
+                registrations: []
             };
 
             events.unshift(newEvt);
             closeModal('createEventModal');
             renderEvents();
             renderAdminTable();
-            alert("Event successfully published!");
+            showFlash('success', 'Event successfully published to the public portal!');
+        }
+
+        // Modals
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('open');
+        }
+
+        function openRegisterModal() {
+            document.getElementById('registerModal').classList.add('open');
         }
 
         function openCreateEventModal() {
             document.getElementById('createEventModal').classList.add('open');
         }
 
-        function openRegisterModal() {
-            openEventDetails(events[0].id);
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('open');
-        }
-
-        function switchView(viewName) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.demo-tab-btn').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-
-            const viewTarget = document.getElementById('view-' + viewName);
-            if (viewTarget) viewTarget.classList.add('active');
-
-            if (viewName === 'public') {
-                document.getElementById('navPublic')?.classList.add('active');
-            } else if (viewName === 'schedule') {
-                document.getElementById('navSchedule')?.classList.add('active');
-                renderSchedule();
-            } else if (viewName === 'announcements') {
-                document.getElementById('navAnnouncements')?.classList.add('active');
-            } else if (viewName === 'admin') {
-                document.getElementById('navAdmin')?.classList.add('active');
-                renderAdminTable();
-            }
-
-            const activeBtn = Array.from(document.querySelectorAll('.demo-tab-btn')).find(b => b.innerText.toLowerCase().includes(viewName));
-            if (activeBtn) activeBtn.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
+        // Search & Filters
         function setCategoryFilter(catId, btn) {
             currentCategory = catId;
             document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
@@ -1091,39 +1490,59 @@
             renderEvents();
         }
 
-        function runFilter() {
-            const selectVal = document.getElementById('demoCategorySelect')?.value || 'all';
+        function handleHeroSearch() {
+            const q = document.getElementById('heroSearchInput').value;
+            const c = document.getElementById('heroCategorySelect').value;
+            if (document.getElementById('eventsSearchInput')) document.getElementById('eventsSearchInput').value = q;
+            if (document.getElementById('eventsCategorySelect')) document.getElementById('eventsCategorySelect').value = c;
+            currentCategory = c;
+            navigateTo('events');
+            renderEvents();
+        }
+
+        function runEventsFilter() {
+            const selectVal = document.getElementById('eventsCategorySelect')?.value || 'all';
             currentCategory = selectVal;
             renderEvents();
         }
 
-        function resetFilters() {
-            if (document.getElementById('demoSearchInput')) document.getElementById('demoSearchInput').value = '';
-            if (document.getElementById('demoCategorySelect')) document.getElementById('demoCategorySelect').value = 'all';
+        function resetEventsFilter() {
+            if (document.getElementById('eventsSearchInput')) document.getElementById('eventsSearchInput').value = '';
+            if (document.getElementById('eventsCategorySelect')) document.getElementById('eventsCategorySelect').value = 'all';
             currentCategory = 'all';
             renderEvents();
         }
 
+        // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
+            updateNavbar();
             renderEvents();
-            renderSchedule();
-            renderAdminTable();
 
-            const searchInput = document.getElementById('demoSearchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', renderEvents);
-            }
-            const catSelect = document.getElementById('demoCategorySelect');
-            if (catSelect) {
-                catSelect.addEventListener('change', runFilter);
+            const droneVideo = document.getElementById('heroDroneVideo');
+            const droneToggle = document.getElementById('heroVideoToggle');
+            if (droneVideo && droneToggle) {
+                droneToggle.addEventListener('click', () => {
+                    if (droneVideo.paused) {
+                        droneVideo.play();
+                        droneToggle.innerHTML = '<i class="bi bi-camera-video-fill"></i> <span>Live Drone View</span>';
+                    } else {
+                        droneVideo.pause();
+                        droneToggle.innerHTML = '<i class="bi bi-play-fill"></i> <span>Resume Drone</span>';
+                    }
+                });
             }
 
             const mobileBtn = document.getElementById('mobileMenuToggle');
-            const menu = document.getElementById('navbarMenu');
-            if (mobileBtn && menu) {
+            const navMenu = document.getElementById('navbarMenu');
+            if (mobileBtn && navMenu) {
                 mobileBtn.addEventListener('click', () => {
-                    menu.classList.toggle('active');
+                    navMenu.classList.toggle('active');
                 });
+            }
+
+            const eventsSearchInput = document.getElementById('eventsSearchInput');
+            if (eventsSearchInput) {
+                eventsSearchInput.addEventListener('input', renderEvents);
             }
         });
     </script>
